@@ -22,6 +22,9 @@ import { CodexQuotaBody } from './codex/CodexQuotaBody';
 import { META_CONFIG } from './meta/data';
 import { MetaQuotaBody } from './meta/MetaQuotaBody';
 import { KIMI_CONFIG } from './kimi/data';
+import { MISTRAL_CONFIG } from './mistral/data';
+import { OPENROUTER_CONFIG } from './openrouter/data';
+import { MistralQuotaBody, OpenRouterQuotaBody } from './apiKey/ApiKeyQuotaBody';
 import { KimiQuotaBody } from './kimi/KimiQuotaBody';
 import { PLUGIN_CONFIG } from './plugin/data';
 import { PluginQuotaBody } from './plugin/PluginQuotaBody';
@@ -61,6 +64,8 @@ export const QUOTA_ADAPTERS: Record<QuotaProviderType, QuotaAdapter> = {
   devin: { ...DEVIN_CONFIG, Body: DevinQuotaBody } as unknown as QuotaAdapter,
   kimi: { ...KIMI_CONFIG, Body: KimiQuotaBody } as unknown as QuotaAdapter,
   meta: { ...META_CONFIG, Body: MetaQuotaBody } as unknown as QuotaAdapter,
+  mistral: { ...MISTRAL_CONFIG, Body: MistralQuotaBody } as unknown as QuotaAdapter,
+  openrouter: { ...OPENROUTER_CONFIG, Body: OpenRouterQuotaBody } as unknown as QuotaAdapter,
   plugin: { ...PLUGIN_CONFIG, Body: PluginQuotaBody } as unknown as QuotaAdapter,
   xai: { ...XAI_CONFIG, Body: XaiQuotaBody } as unknown as QuotaAdapter,
 };

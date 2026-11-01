@@ -10,7 +10,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { authFilesApi } from '@/services/api';
+import { authFilesApi, providersApi } from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { IconSearch, IconX } from '@/components/ui/icons';
@@ -46,6 +46,7 @@ import {
 } from './logic';
 import { nextRecoveryMs } from './resetSchedule';
 import { QUOTA_ADAPTERS, getQuotaSetter, type QuotaCardState } from './providers';
+import { buildApiKeyQuotaFiles } from './providers/apiKey/compat';
 import type { QuotaProviderType } from './providers/types';
 import { useDevinQuotaAutoLoad } from './providers/devin/useDevinQuotaAutoLoad';
 import { useQuotaActions } from './hooks/useQuotaActions';
@@ -101,9 +102,14 @@ export function QuotaPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await authFilesApi.list();
+      // API-key providers live in config, not auth files; their cards are optional extras,
+      // so a config read failure must not hide the auth-file cards.
+      const [data, compatProviders] = await Promise.all([
+        authFilesApi.list(),
+        providersApi.getOpenAIProviders().catch(() => []),
+      ]);
       if (!isCurrent()) return;
-      setFiles(data?.files || []);
+      setFiles([...(data?.files || []), ...buildApiKeyQuotaFiles(compatProviders)]);
       setFilesGeneration(sessionGeneration);
     } catch (err: unknown) {
       if (!isCurrent()) return;
@@ -132,6 +138,8 @@ export function QuotaPage() {
   const devinQuota = useQuotaStore((state) => state.devinQuota);
   const kimiQuota = useQuotaStore((state) => state.kimiQuota);
   const metaQuota = useQuotaStore((state) => state.metaQuota);
+  const mistralQuota = useQuotaStore((state) => state.mistralQuota);
+  const openrouterQuota = useQuotaStore((state) => state.openrouterQuota);
   const pluginQuota = useQuotaStore((state) => state.pluginQuota);
   const xaiQuota = useQuotaStore((state) => state.xaiQuota);
 
@@ -144,6 +152,8 @@ export function QuotaPage() {
         devin: devinQuota,
         kimi: kimiQuota,
         meta: metaQuota,
+        mistral: mistralQuota,
+        openrouter: openrouterQuota,
         plugin: pluginQuota,
         xai: xaiQuota,
       }) as unknown as Record<QuotaProviderType, Record<string, QuotaCardState>>,
@@ -154,6 +164,8 @@ export function QuotaPage() {
       devinQuota,
       kimiQuota,
       metaQuota,
+      mistralQuota,
+      openrouterQuota,
       pluginQuota,
       xaiQuota,
     ]

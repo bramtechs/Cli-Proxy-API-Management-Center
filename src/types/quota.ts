@@ -523,3 +523,38 @@ export interface XaiQuotaState {
   error?: string;
   errorStatus?: number;
 }
+
+// API-key quota cards (OpenAI-compatible providers configured with plain API keys)
+export type ApiKeyQuotaUnit = 'usd' | 'count' | 'tokens';
+
+export interface ApiKeyQuotaRow {
+  id: string;
+  label: string;
+  used: number;
+  /** Zero or negative means the window has no reported cap. */
+  limit: number;
+  unit: ApiKeyQuotaUnit;
+  /** Reset instant in epoch ms; null when the upstream reports no reset. */
+  resetAtMs?: number | null;
+  /** Window length in hours, used by the quota timeline. */
+  periodHours?: number | null;
+}
+
+export interface ApiKeyQuotaDetail {
+  id: string;
+  label: string;
+  value: string;
+}
+
+export interface ApiKeyQuotaState {
+  status: 'idle' | 'loading' | 'success' | 'error';
+  rows: ApiKeyQuotaRow[];
+  details?: ApiKeyQuotaDetail[];
+  /** Free-form note rendered below the rows (already translated). */
+  note?: string | null;
+  error?: string;
+  errorStatus?: number;
+}
+
+export type MistralQuotaState = ApiKeyQuotaState;
+export type OpenRouterQuotaState = ApiKeyQuotaState;

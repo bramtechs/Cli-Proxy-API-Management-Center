@@ -10,6 +10,8 @@ import { CODEX_CONFIG } from './providers/codex/data';
 import { DEVIN_CONFIG } from './providers/devin/data';
 import { KIMI_CONFIG } from './providers/kimi/data';
 import { META_CONFIG } from './providers/meta/data';
+import { MISTRAL_CONFIG } from './providers/mistral/data';
+import { OPENROUTER_CONFIG } from './providers/openrouter/data';
 import { PLUGIN_CONFIG } from './providers/plugin/data';
 import { XAI_CONFIG } from './providers/xai/data';
 import type { QuotaProviderType } from './providers/types';
@@ -22,6 +24,8 @@ const QUOTA_FILTER_MAP: Record<QuotaProviderType, (file: AuthFileItem) => boolea
   devin: DEVIN_CONFIG.filterFn,
   kimi: KIMI_CONFIG.filterFn,
   meta: META_CONFIG.filterFn,
+  mistral: MISTRAL_CONFIG.filterFn,
+  openrouter: OPENROUTER_CONFIG.filterFn,
   plugin: PLUGIN_CONFIG.filterFn,
   xai: XAI_CONFIG.filterFn,
 };

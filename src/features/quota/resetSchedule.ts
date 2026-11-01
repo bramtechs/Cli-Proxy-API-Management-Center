@@ -141,7 +141,7 @@ export function collectQuotaRowInstants(
     return collectRows(buckets, 'bucket');
   }
 
-  if (provider === 'kimi') {
+  if (provider === 'kimi' || provider === 'mistral' || provider === 'openrouter') {
     return collectRows((quota as { rows?: WindowLike[] }).rows ?? [], 'row');
   }
 

@@ -3,6 +3,8 @@ import iconAntigravity from '@/assets/icons/antigravity.svg';
 import iconClaude from '@/assets/icons/claude.svg';
 import iconCodex from '@/assets/icons/codex.svg';
 import iconMeta from '@/assets/icons/meta.svg';
+import iconMistral from '@/assets/icons/mistral.svg';
+import iconOpenRouter from '@/assets/icons/openrouter.svg';
 import iconDevin from '@/assets/icons/devin.svg';
 import iconDevinDark from '@/assets/icons/devin-dark.svg';
 import iconGemini from '@/assets/icons/gemini.svg';
@@ -28,14 +30,7 @@ export type AuthFileModelItem = {
 export type AuthFileIconAsset = string | { light: string; dark: string };
 
 export type QuotaProviderType =
-  | 'antigravity'
-  | 'claude'
-  | 'codex'
-  | 'devin'
-  | 'kimi'
-  | 'meta'
-  | 'plugin'
-  | 'xai';
+  'antigravity' | 'claude' | 'codex' | 'devin' | 'kimi' | 'meta' | 'plugin' | 'xai';
 export type AuthFileQuotaFilter = string | null;
 export type OAuthConfigLoadError = 'loading' | 'unsupported' | 'load' | null;
 
@@ -90,6 +85,8 @@ export const AUTH_FILE_ICONS: Record<string, AuthFileIconAsset> = {
   claude: iconClaude,
   codex: iconCodex,
   meta: iconMeta,
+  mistral: iconMistral,
+  openrouter: iconOpenRouter,
   devin: { light: iconDevin, dark: iconDevinDark },
   gemini: iconGemini,
   xai: { light: iconGrok, dark: iconGrokDark },

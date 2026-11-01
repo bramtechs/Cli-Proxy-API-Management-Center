@@ -106,7 +106,8 @@ const normalizeApiKeyEntry = (entry: unknown): ApiKeyEntry | null => {
 
   const proxyUrl = record?.['proxy-url'];
   const weight = readCredentialWeight(record?.weight);
-  const authIndex = normalizeAuthIndex(record?.['auth-index']);
+  // v8 config responses spell it auth_index; v0 responses use auth-index.
+  const authIndex = normalizeAuthIndex(record?.['auth-index'] ?? record?.['auth_index']);
 
   const result: ApiKeyEntry = {
     apiKey: trimmed,
@@ -180,7 +181,7 @@ const normalizeProviderKeyConfig = (item: unknown): ProviderKeyConfig | null => 
   if (models.length) config.models = models;
   const excludedModels = normalizeExcludedModels(record?.['excluded-models']);
   if (excludedModels.length) config.excludedModels = excludedModels;
-  const authIndex = normalizeAuthIndex(record?.['auth-index']);
+  const authIndex = normalizeAuthIndex(record?.['auth-index'] ?? record?.['auth_index']);
   if (authIndex) config.authIndex = authIndex;
 
   const cloakRaw = record?.cloak;
@@ -248,7 +249,7 @@ const normalizeGeminiKeyConfig = (item: unknown): GeminiKeyConfig | null => {
   if (headers) config.headers = headers;
   const excludedModels = normalizeExcludedModels(record?.['excluded-models']);
   if (excludedModels.length) config.excludedModels = excludedModels;
-  const authIndex = normalizeAuthIndex(record?.['auth-index']);
+  const authIndex = normalizeAuthIndex(record?.['auth-index'] ?? record?.['auth_index']);
   if (authIndex) config.authIndex = authIndex;
   return config;
 };
@@ -293,7 +294,7 @@ const normalizeOpenAIProvider = (
   if (headers) result.headers = headers;
   if (models.length) result.models = models;
   if (priority !== undefined) result.priority = Number(priority);
-  const authIndex = normalizeAuthIndex(provider['auth-index']);
+  const authIndex = normalizeAuthIndex(provider['auth-index'] ?? provider['auth_index']);
   if (authIndex) result.authIndex = authIndex;
   if (sourceIndex !== undefined) result.sourceIndex = sourceIndex;
   return result;

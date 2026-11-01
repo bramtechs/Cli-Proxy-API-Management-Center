@@ -17,6 +17,8 @@ import type {
   CodexQuotaState,
   CodexQuotaWindow,
   KimiQuotaState,
+  MistralQuotaState,
+  OpenRouterQuotaState,
   Theme,
   XaiBillingSummary,
   XaiQuotaState,
@@ -152,6 +154,72 @@ const claudeQuota = (planType: string, used: [number, number]): ClaudeQuotaState
 });
 
 const buildAccounts = (): MockAccount[] => [
+  {
+    entry: {
+      type: 'mistral',
+      file: file('mistral', 'mistral', { quotaSource: 'openai-compatibility' }),
+    },
+    quota: {
+      status: 'success',
+      rows: [
+        { id: 'mistral:req:minute', label: 'Requests / min', used: 1, limit: 100, unit: 'count' },
+        {
+          id: 'mistral:tokens:minute',
+          label: 'Tokens / min',
+          used: 17,
+          limit: 100_000,
+          unit: 'tokens',
+        },
+      ],
+      details: [
+        { id: 'model', label: 'Model', value: 'mistral-small-latest' },
+        { id: 'cost', label: 'Probe cost', value: '17 tokens' },
+      ],
+      note: 'Mistral only reports per-minute limits through the API. Monthly usage is shown in the Mistral console.',
+    } as MistralQuotaState,
+  },
+  {
+    entry: {
+      type: 'openrouter',
+      file: file('openrouter', 'openrouter', { quotaSource: 'openai-compatibility' }),
+    },
+    quota: {
+      status: 'success',
+      rows: [
+        {
+          id: 'openrouter:credits',
+          label: 'Account credits',
+          used: 163.82,
+          limit: 164,
+          unit: 'usd',
+        },
+        {
+          id: 'openrouter:budget:g1',
+          label: 'Budget · daily',
+          used: 0,
+          limit: 10,
+          unit: 'usd',
+          resetAtMs: Date.now() + 5 * HOUR_MS,
+          periodHours: 24,
+        },
+        {
+          id: 'openrouter:free-daily',
+          label: 'Free model requests',
+          used: 0,
+          limit: 1000,
+          unit: 'count',
+          resetAtMs: Date.now() + 5 * HOUR_MS,
+          periodHours: 24,
+        },
+      ],
+      details: [
+        { id: 'balance', label: 'Balance', value: '$0.18' },
+        { id: 'tier', label: 'Tier', value: 'Paid' },
+        { id: 'usage_daily', label: 'Spent today', value: '$0.00' },
+        { id: 'usage_monthly', label: 'Spent this month', value: '$0.00' },
+      ],
+    } as OpenRouterQuotaState,
+  },
   ...['Allegro', 'Allegretto', 'Moderato', 'Andante'].map((planName): MockAccount => ({
     entry: { type: 'kimi', file: file(`kimi-${planName.toLowerCase()}.json`, 'kimi') },
     quota: {

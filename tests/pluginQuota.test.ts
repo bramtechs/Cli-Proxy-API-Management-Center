@@ -19,6 +19,7 @@ import {
   isPluginQuotaFile,
 } from '@/utils/quota';
 import { QUOTA_TAB_ORDER } from '@/features/quota/constants';
+import { API_KEY_QUOTA_PROVIDERS } from '@/features/quota/providers/apiKey/compat';
 import {
   fetchPluginQuota,
   normalizePluginQuotaSummary,
@@ -68,7 +69,9 @@ describe('generic plugin quota', () => {
   });
 
   test('keeps built-in quota cards when a plugin also advertises quota', () => {
-    const builtIns = QUOTA_TAB_ORDER.filter((type) => type !== 'plugin');
+    const builtIns = QUOTA_TAB_ORDER.filter(
+      (type) => type !== 'plugin' && !API_KEY_QUOTA_PROVIDERS.has(type)
+    );
     expect([...BUILT_IN_QUOTA_PROVIDERS].sort()).toEqual([...builtIns].sort());
     for (const type of builtIns) {
       for (const capability of [
