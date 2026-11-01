@@ -4,6 +4,8 @@ import type { OpenAIProviderConfig } from '@/types';
 import { classifyQuotaFiles } from '@/features/quota/logic';
 import {
   buildApiKeyQuotaFiles,
+  buildMistralConsoleProviderConfig,
+  getMistralConsoleAuthIndex,
   resolveApiKeyQuotaProvider,
 } from '@/features/quota/providers/apiKey/compat';
 import {
@@ -268,6 +270,32 @@ describe('Mistral included monthly budget', () => {
     const data = await MISTRAL_CONFIG.fetchQuota(files[0], t);
     expect(data.rows.map((row) => row.id)).toEqual(['mistral:req:minute']);
     expect(data.note).toBe('mistral_quota.console_session_expired');
+  });
+
+  test('the dashboard writes the cookie into the console entry', () => {
+    const created = buildMistralConsoleProviderConfig([provider({})], '  ory_session_a=1 ');
+    expect(created.existing).toBeNull();
+    expect(created.config).toMatchObject({
+      name: 'mistral-console',
+      baseUrl: 'https://console.mistral.ai/api/billing/v2',
+      apiKeyEntries: [{ apiKey: 'ory_session_a=1' }],
+      models: [],
+      disabled: false,
+    });
+
+    const current = consoleProvider({ source: { groupIndex: 2 } } as Partial<OpenAIProviderConfig>);
+    const updated = buildMistralConsoleProviderConfig([provider({}), current], 'ory_session_b=2');
+    expect(updated.existing).toBe(current);
+    expect(updated.config.name).toBe('mistral-console');
+    expect(updated.config.source).toEqual({ groupIndex: 2 });
+    expect(updated.config.apiKeyEntries).toEqual([{ apiKey: 'ory_session_b=2' }]);
+  });
+
+  test('the last built file list publishes the console auth-index', () => {
+    buildApiKeyQuotaFiles([provider({}), consoleProvider()]);
+    expect(getMistralConsoleAuthIndex()).toBe('idx-console');
+    buildApiKeyQuotaFiles([provider({})]);
+    expect(getMistralConsoleAuthIndex()).toBeNull();
   });
 });
 

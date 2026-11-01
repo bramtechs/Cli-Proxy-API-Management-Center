@@ -74,11 +74,27 @@ export const isApiKeyQuotaFileFor = (file: AuthFileItem, provider: ApiKeyQuotaPr
 /** Host of the console entry whose `api-key` is the Mistral console session cookie. */
 export const MISTRAL_CONSOLE_HOST = 'console.mistral.ai';
 
+/** Base URL stored on that entry; only the billing endpoints are ever called. */
+export const MISTRAL_CONSOLE_BASE_URL = 'https://console.mistral.ai/api/billing/v2';
+
+/** Name given to the console entry when the dashboard creates it. */
+export const MISTRAL_CONSOLE_PROVIDER_NAME = 'mistral-console';
+
 const isMistralConsoleBaseUrl = (baseUrl: unknown): boolean => {
   if (typeof baseUrl !== 'string' || !baseUrl.trim()) return false;
   const url = parseUrl(baseUrl);
   return url !== null && url.hostname.toLowerCase() === MISTRAL_CONSOLE_HOST;
 };
+
+/**
+ * Auth-index discovered by the last `buildApiKeyQuotaFiles` call.
+ *
+ * Quota bodies only receive their own file, so a card refreshed right after the cookie is
+ * saved would otherwise keep using the pre-save index (usually none at all).
+ */
+let currentConsoleAuthIndex: string | null = null;
+
+export const getMistralConsoleAuthIndex = (): string | null => currentConsoleAuthIndex;
 
 /**
  * Auth-index of the first enabled `console.mistral.ai` provider key, if any.
@@ -101,6 +117,26 @@ export function findMistralConsoleAuthIndex(
 }
 
 /**
+ * Provider config that stores a console session cookie, reusing the existing entry (and
+ * its `source`, which the update call needs) when the dashboard already created one.
+ */
+export function buildMistralConsoleProviderConfig(
+  providers: readonly OpenAIProviderConfig[],
+  cookie: string
+): { config: OpenAIProviderConfig; existing: OpenAIProviderConfig | null } {
+  const existing = providers.find((provider) => isMistralConsoleBaseUrl(provider.baseUrl)) ?? null;
+  const config: OpenAIProviderConfig = {
+    ...(existing ?? {}),
+    name: existing?.name || MISTRAL_CONSOLE_PROVIDER_NAME,
+    baseUrl: MISTRAL_CONSOLE_BASE_URL,
+    apiKeyEntries: [{ apiKey: cookie.trim() }],
+    models: [],
+    disabled: false,
+  };
+  return { config, existing };
+}
+
+/**
  * One entry per enabled key of every recognised OpenAI-compatible provider.
  * Keys without an auth-index are skipped: the api-call endpoint cannot resolve them.
  */
@@ -110,6 +146,7 @@ export function buildApiKeyQuotaFiles(
   const files: ApiKeyQuotaFile[] = [];
   const usedNames = new Set<string>();
   const consoleAuthIndex = findMistralConsoleAuthIndex(providers);
+  currentConsoleAuthIndex = consoleAuthIndex;
   for (const provider of providers) {
     if (provider.disabled) continue;
     const kind = resolveApiKeyQuotaProvider(provider.baseUrl);

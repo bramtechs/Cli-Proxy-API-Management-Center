@@ -625,6 +625,12 @@
     "monthly_budget": "Hạn mức API hàng tháng đi kèm gói",
     "monthly_budget_spent": "Đã dùng trong tháng",
     "console_session_expired": "Phiên bảng điều khiển Mistral đã hết hạn. Dán cookie mới vào nhà cung cấp mistral-console để xem hạn mức hàng tháng.",
+    "console_cookie_label": "Cookie phiên bảng điều khiển Mistral",
+    "console_cookie_hint": "Bảng điều khiển → DevTools → Network → một yêu cầu console.mistral.ai/api bất kỳ → sao chép tiêu đề cookie. Cookie được lưu trong cấu hình proxy và chỉ dùng để đọc hạn mức hàng tháng.",
+    "console_cookie_connect": "Kết nối bảng điều khiển Mistral",
+    "console_cookie_update": "Cập nhật phiên bảng điều khiển",
+    "console_cookie_saving": "Đang lưu...",
+    "console_cookie_saved": "Đã lưu phiên",
     "minute_only_note": "API Mistral chỉ báo giới hạn theo phút. Thêm cookie phiên bảng điều khiển để xem hạn mức API hàng tháng đi kèm gói.",
     "rate_limited": "Hiện đang bị giới hạn tốc độ. Giới hạn sẽ đặt lại trong vòng một phút."
   },

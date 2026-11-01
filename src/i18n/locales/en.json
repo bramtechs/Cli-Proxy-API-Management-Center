@@ -669,6 +669,12 @@
     "monthly_budget": "Included monthly API budget",
     "monthly_budget_spent": "Spent this month",
     "console_session_expired": "Mistral console session expired. Paste a fresh cookie into the mistral-console provider to see the monthly budget.",
+    "console_cookie_label": "Mistral console session cookie",
+    "console_cookie_hint": "Console → DevTools → Network → any console.mistral.ai/api request → copy the cookie request header. It is stored in the proxy config and only used to read the included monthly budget.",
+    "console_cookie_connect": "Connect Mistral console",
+    "console_cookie_update": "Update console session",
+    "console_cookie_saving": "Saving...",
+    "console_cookie_saved": "Session saved",
     "minute_only_note": "Mistral only reports per-minute limits through the API. Add the console session cookie to see the included monthly budget.",
     "rate_limited": "Rate limited right now. Limits reset within a minute."
   },

@@ -105,4 +105,6 @@ export interface QuotaBodyProps<TState> {
   planItems?: ReactNode;
   /** Host-owned content placed right after the plan row, before usage rows. */
   afterPlan?: ReactNode;
+  /** Re-read this card's quota; used after a body edits credentials. */
+  onRefresh?: () => void;
 }

@@ -667,6 +667,12 @@
     "monthly_budget": "方案內含月度 API 額度",
     "monthly_budget_spent": "本月已用",
     "console_session_expired": "Mistral 主控台工作階段已過期。請在 mistral-console 供應商中填入新的 Cookie 以查看月度額度。",
+    "console_cookie_label": "Mistral 主控台工作階段 Cookie",
+    "console_cookie_hint": "主控台 → 開發人員工具 → 網路 → 任一 console.mistral.ai/api 請求 → 複製 cookie 請求標頭。它會存於代理設定，僅用於讀取方案內含月度額度。",
+    "console_cookie_connect": "連接 Mistral 主控台",
+    "console_cookie_update": "更新主控台工作階段",
+    "console_cookie_saving": "儲存中...",
+    "console_cookie_saved": "工作階段已儲存",
     "minute_only_note": "Mistral API 僅回傳每分鐘限額。填入主控台工作階段 Cookie 即可查看方案內含月度額度。",
     "rate_limited": "目前已被限速，限額將在一分鐘內恢復。"
   },

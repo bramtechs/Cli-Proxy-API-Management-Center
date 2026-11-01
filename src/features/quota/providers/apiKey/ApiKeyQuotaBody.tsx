@@ -11,6 +11,8 @@ import { useNow } from '@/hooks/useNow';
 import { QuotaMeter } from '../../components/QuotaMeter';
 import { QuotaResetLabel } from '../../components/QuotaResetLabel';
 import { collectQuotaRowInstants, pickUrgentRowId } from '../../resetSchedule';
+import { getMistralConsoleAuthIndex } from '../apiKey/compat';
+import { ConsoleSessionForm } from '../mistral/ConsoleSessionForm';
 import type { QuotaBodyProps } from '../../types';
 import type { QuotaProviderType } from '../types';
 
@@ -52,6 +54,7 @@ function ApiKeyQuotaBody({
   provider,
   quota,
   classes,
+  onRefresh,
 }: QuotaBodyProps<ApiKeyQuotaState> & { provider: QuotaProviderType }) {
   const { t, i18n } = useTranslation();
   const now = useNow();
@@ -122,6 +125,9 @@ function ApiKeyQuotaBody({
         );
       })}
       {quota.note && <div className={classes.quotaMessage}>{quota.note}</div>}
+      {provider === 'mistral' && (
+        <ConsoleSessionForm hasSession={Boolean(getMistralConsoleAuthIndex())} onSaved={onRefresh} />
+      )}
     </>
   );
 }

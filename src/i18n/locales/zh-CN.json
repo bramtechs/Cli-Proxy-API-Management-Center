@@ -667,6 +667,12 @@
     "monthly_budget": "套餐内含月度 API 额度",
     "monthly_budget_spent": "本月已用",
     "console_session_expired": "Mistral 控制台会话已过期。请在 mistral-console 供应商中填入新的 Cookie 以查看月度额度。",
+    "console_cookie_label": "Mistral 控制台会话 Cookie",
+    "console_cookie_hint": "控制台 → 开发者工具 → 网络 → 任意 console.mistral.ai/api 请求 → 复制 cookie 请求头。它保存在代理配置中，仅用于读取套餐内含月度额度。",
+    "console_cookie_connect": "连接 Mistral 控制台",
+    "console_cookie_update": "更新控制台会话",
+    "console_cookie_saving": "保存中...",
+    "console_cookie_saved": "会话已保存",
     "minute_only_note": "Mistral API 仅返回每分钟限额。填入控制台会话 Cookie 即可查看套餐内含月度额度。",
     "rate_limited": "当前已被限速，限额将在一分钟内恢复。"
   },

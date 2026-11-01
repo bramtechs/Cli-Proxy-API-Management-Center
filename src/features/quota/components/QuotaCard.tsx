@@ -167,6 +167,7 @@ export function QuotaCard(props: QuotaCardProps) {
             classes={quotaClasses}
             planItems={claudePlanItems}
             afterPlan={claudeAfterPlan}
+            onRefresh={onRefresh}
           />
         ) : !retainedClaudeUsage ? (
           <div className={styles.idleHint}>{t(`${adapter.i18nPrefix}.idle`)}</div>
@@ -182,6 +183,7 @@ export function QuotaCard(props: QuotaCardProps) {
             classes={quotaClasses}
             planItems={claudePlanItems}
             afterPlan={claudeAfterPlan}
+            onRefresh={onRefresh}
           />
         )}
       </div>

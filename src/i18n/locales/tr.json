@@ -669,6 +669,12 @@
     "monthly_budget": "Plana dahil aylık API bütçesi",
     "monthly_budget_spent": "Bu ay harcanan",
     "console_session_expired": "Mistral konsol oturumu sona erdi. Aylık bütçeyi görmek için mistral-console sağlayıcısına yeni bir çerez yapıştırın.",
+    "console_cookie_label": "Mistral konsol oturum çerezi",
+    "console_cookie_hint": "Konsol → DevTools → Network → herhangi bir console.mistral.ai/api isteği → cookie istek başlığını kopyalayın. Proxy yapılandırmasında saklanır ve yalnızca aylık bütçeyi okumak için kullanılır.",
+    "console_cookie_connect": "Mistral konsolunu bağla",
+    "console_cookie_update": "Konsol oturumunu güncelle",
+    "console_cookie_saving": "Kaydediliyor...",
+    "console_cookie_saved": "Oturum kaydedildi",
     "minute_only_note": "Mistral API yalnızca dakikalık limitleri bildirir. Plana dahil aylık bütçeyi görmek için konsol oturum çerezini ekleyin.",
     "rate_limited": "Şu anda hız sınırına takıldı. Limitler bir dakika içinde sıfırlanır."
   },

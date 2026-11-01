@@ -672,6 +672,12 @@
     "monthly_budget": "Месячный лимит API по тарифу",
     "monthly_budget_spent": "Израсходовано за месяц",
     "console_session_expired": "Сессия консоли Mistral истекла. Вставьте новый cookie в провайдер mistral-console, чтобы видеть месячный лимит.",
+    "console_cookie_label": "Cookie сессии консоли Mistral",
+    "console_cookie_hint": "Консоль → DevTools → Network → любой запрос console.mistral.ai/api → скопируйте заголовок cookie. Он хранится в конфигурации прокси и используется только для чтения месячного лимита.",
+    "console_cookie_connect": "Подключить консоль Mistral",
+    "console_cookie_update": "Обновить сессию консоли",
+    "console_cookie_saving": "Сохранение...",
+    "console_cookie_saved": "Сессия сохранена",
     "minute_only_note": "API Mistral сообщает только поминутные лимиты. Добавьте cookie сессии консоли, чтобы видеть месячный лимит по тарифу.",
     "rate_limited": "Сейчас действует ограничение скорости. Лимиты сбросятся в течение минуты."
   },

@@ -15,7 +15,7 @@ import { createStatusError } from '@/utils/quota';
 import { normalizeAuthIndex } from '@/utils/authIndex';
 import { isRecord } from '@/utils/helpers';
 import type { QuotaProviderData } from '../types';
-import { isApiKeyQuotaFile, isApiKeyQuotaFileFor } from '../apiKey/compat';
+import { isApiKeyQuotaFile, isApiKeyQuotaFileFor, getMistralConsoleAuthIndex } from '../apiKey/compat';
 
 export const MISTRAL_DEFAULT_PROBE_MODEL = 'mistral-small-latest';
 
@@ -167,7 +167,7 @@ const fetchMistralQuota = async (file: AuthFileItem, t: TFunction): Promise<Mist
   const model = pickMistralProbeModel(file.models);
   const consoleAuthIndex = normalizeAuthIndex(
     isApiKeyQuotaFile(file) ? file.consoleAuthIndex : undefined
-  );
+  ) ?? normalizeAuthIndex(getMistralConsoleAuthIndex());
 
   const budgetRequest = consoleAuthIndex
     ? apiCallApi
