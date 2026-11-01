@@ -622,7 +622,10 @@
     "probe_model": "Mô hình",
     "probe_cost": "Chi phí kiểm tra",
     "probe_cost_value": "{{tokens}} token",
-    "minute_only_note": "API Mistral chỉ báo giới hạn theo phút. Mức sử dụng hằng tháng có trong bảng điều khiển Mistral.",
+    "monthly_budget": "Hạn mức API hàng tháng đi kèm gói",
+    "monthly_budget_spent": "Đã dùng trong tháng",
+    "console_session_expired": "Phiên bảng điều khiển Mistral đã hết hạn. Dán cookie mới vào nhà cung cấp mistral-console để xem hạn mức hàng tháng.",
+    "minute_only_note": "API Mistral chỉ báo giới hạn theo phút. Thêm cookie phiên bảng điều khiển để xem hạn mức API hàng tháng đi kèm gói.",
     "rate_limited": "Hiện đang bị giới hạn tốc độ. Giới hạn sẽ đặt lại trong vòng một phút."
   },
   "openrouter_quota": {

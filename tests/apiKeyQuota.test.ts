@@ -8,6 +8,7 @@ import {
 } from '@/features/quota/providers/apiKey/compat';
 import {
   MISTRAL_CONFIG,
+  parseMistralBudget,
   parseMistralRateLimitRows,
   pickMistralProbeModel,
 } from '@/features/quota/providers/mistral/data';
@@ -159,6 +160,114 @@ describe('Mistral rate-limit parsing', () => {
     });
     const [file] = buildApiKeyQuotaFiles([provider({})]);
     await expect(MISTRAL_CONFIG.fetchQuota(file, t)).rejects.toThrow('401 Unauthorized');
+  });
+});
+
+describe('Mistral included monthly budget', () => {
+  const consoleProvider = (overrides: Partial<OpenAIProviderConfig> = {}) =>
+    provider({
+      name: 'mistral-console',
+      baseUrl: 'https://console.mistral.ai/api/billing/v2',
+      apiKeyEntries: [{ apiKey: 'ory_session_x=1', authIndex: 'idx-console' }],
+      models: [],
+      ...overrides,
+    });
+
+  const budgetBody = {
+    vibe_budget: { usage_percentage: 0, initial_budget: 8.5, currency: 'EUR' },
+    api_budget: {
+      usage_percentage: 10.94,
+      initial_budget: 8.5,
+      currency: 'EUR',
+      reset_at: '2026-12-01T00:00:00Z',
+      payg_enabled: false,
+    },
+    usage_percentage: 10.94,
+    initial_budget: 8.5,
+    currency: 'EUR',
+    reset_at: '2026-12-01T00:00:00Z',
+  };
+
+  test('the console entry lends its auth-index and produces no card of its own', () => {
+    const files = buildApiKeyQuotaFiles([provider({}), consoleProvider()]);
+    expect(files).toHaveLength(1);
+    expect(files[0].provider).toBe('mistral');
+    expect(files[0].consoleAuthIndex).toBe('idx-console');
+    // The session cookie never reaches the quota page state.
+    expect(JSON.stringify(files)).not.toContain('ory_session');
+  });
+
+  test('maps the console payload to a monthly currency row', () => {
+    const { row, details } = parseMistralBudget(budgetBody, t);
+    expect(row).toMatchObject({
+      id: 'mistral:monthly-budget',
+      label: 'mistral_quota.monthly_budget',
+      limit: 8.5,
+      unit: 'currency',
+      currency: 'EUR',
+      periodHours: null,
+    });
+    expect(row?.used).toBeCloseTo(0.9299, 6);
+    expect(row?.resetAtMs).toBe(Date.parse('2026-12-01T00:00:00Z'));
+    expect(details.map((detail) => detail.id)).toEqual(['budget-spent']);
+  });
+
+  test('falls back to the root budget fields and ignores unusable payloads', () => {
+    const { row } = parseMistralBudget(
+      { usage_percentage: 50, initial_budget: 4, currency: 'USD', reset_at: null },
+      t
+    );
+    expect(row).toMatchObject({ used: 2, limit: 4, currency: 'USD', resetAtMs: null });
+    expect(parseMistralBudget({ api_budget: { initial_budget: 0 } }, t).row).toBeNull();
+    expect(parseMistralBudget(null, t).row).toBeNull();
+  });
+
+  test('a refresh reads the budget through the console cookie', async () => {
+    const calls: ApiCallRequest[] = [];
+    apiCallApi.request = async (payload: ApiCallRequest): Promise<ApiCallResult> => {
+      calls.push(payload);
+      if (payload.url.includes('console.mistral.ai')) {
+        return { statusCode: 200, header: {}, bodyText: '{}', body: budgetBody };
+      }
+      return {
+        statusCode: 200,
+        header: {
+          'X-Ratelimit-Limit-Req-Minute': ['100'],
+          'X-Ratelimit-Remaining-Req-Minute': ['99'],
+        },
+        bodyText: '{}',
+        body: {},
+      };
+    };
+    const files = buildApiKeyQuotaFiles([provider({}), consoleProvider()]);
+    const data = await MISTRAL_CONFIG.fetchQuota(files[0], t);
+
+    const consoleCall = calls.find((call) => call.url.includes('console.mistral.ai'));
+    expect(consoleCall?.url).toBe('https://console.mistral.ai/api/billing/v2/budget');
+    expect(consoleCall?.header?.Cookie).toBe('$TOKEN$');
+    expect(data.rows.map((row) => row.id)).toEqual(['mistral:monthly-budget', 'mistral:req:minute']);
+    expect(data.note).toBeNull();
+  });
+
+  test('an expired console session keeps the rate limits and says why', async () => {
+    apiCallApi.request = async (payload: ApiCallRequest): Promise<ApiCallResult> => {
+      if (payload.url.includes('console.mistral.ai')) {
+        return { statusCode: 401, header: {}, bodyText: '{"detail":null}', body: { detail: null } };
+      }
+      return {
+        statusCode: 200,
+        header: {
+          'X-Ratelimit-Limit-Req-Minute': ['100'],
+          'X-Ratelimit-Remaining-Req-Minute': ['99'],
+        },
+        bodyText: '{}',
+        body: {},
+      };
+    };
+    const files = buildApiKeyQuotaFiles([provider({}), consoleProvider()]);
+    const data = await MISTRAL_CONFIG.fetchQuota(files[0], t);
+    expect(data.rows.map((row) => row.id)).toEqual(['mistral:req:minute']);
+    expect(data.note).toBe('mistral_quota.console_session_expired');
   });
 });
 

@@ -664,7 +664,10 @@
     "probe_model": "模型",
     "probe_cost": "探測消耗",
     "probe_cost_value": "{{tokens}} tokens",
-    "minute_only_note": "Mistral API 僅回傳每分鐘限額，月度用量請至 Mistral 主控台查看。",
+    "monthly_budget": "方案內含月度 API 額度",
+    "monthly_budget_spent": "本月已用",
+    "console_session_expired": "Mistral 主控台工作階段已過期。請在 mistral-console 供應商中填入新的 Cookie 以查看月度額度。",
+    "minute_only_note": "Mistral API 僅回傳每分鐘限額。填入主控台工作階段 Cookie 即可查看方案內含月度額度。",
     "rate_limited": "目前已被限速，限額將在一分鐘內恢復。"
   },
   "openrouter_quota": {

@@ -58,6 +58,11 @@ export interface ApiKeyQuotaFile extends AuthFileItem {
   /** Upstream model names configured for the provider, in config order. */
   models: string[];
   providerName: string;
+  /**
+   * Auth-index of the `console.mistral.ai` config entry that holds the console session
+   * cookie, when one is configured. Read-only: it is never used for inference.
+   */
+  consoleAuthIndex?: string;
 }
 
 export const isApiKeyQuotaFile = (file: AuthFileItem): file is ApiKeyQuotaFile =>
@@ -65,6 +70,35 @@ export const isApiKeyQuotaFile = (file: AuthFileItem): file is ApiKeyQuotaFile =
 
 export const isApiKeyQuotaFileFor = (file: AuthFileItem, provider: ApiKeyQuotaProvider): boolean =>
   isApiKeyQuotaFile(file) && file.provider === provider;
+
+/** Host of the console entry whose `api-key` is the Mistral console session cookie. */
+export const MISTRAL_CONSOLE_HOST = 'console.mistral.ai';
+
+const isMistralConsoleBaseUrl = (baseUrl: unknown): boolean => {
+  if (typeof baseUrl !== 'string' || !baseUrl.trim()) return false;
+  const url = parseUrl(baseUrl);
+  return url !== null && url.hostname.toLowerCase() === MISTRAL_CONSOLE_HOST;
+};
+
+/**
+ * Auth-index of the first enabled `console.mistral.ai` provider key, if any.
+ *
+ * That entry holds the console session cookie instead of an inference key, so it never
+ * produces a quota card of its own; the Mistral card borrows its auth-index to read the
+ * monthly included-budget endpoint through api-call.
+ */
+export function findMistralConsoleAuthIndex(
+  providers: readonly OpenAIProviderConfig[]
+): string | null {
+  for (const provider of providers) {
+    if (provider.disabled || !isMistralConsoleBaseUrl(provider.baseUrl)) continue;
+    for (const entry of provider.apiKeyEntries ?? []) {
+      const authIndex = normalizeAuthIndex(entry.authIndex);
+      if (authIndex) return authIndex;
+    }
+  }
+  return null;
+}
 
 /**
  * One entry per enabled key of every recognised OpenAI-compatible provider.
@@ -75,6 +109,7 @@ export function buildApiKeyQuotaFiles(
 ): ApiKeyQuotaFile[] {
   const files: ApiKeyQuotaFile[] = [];
   const usedNames = new Set<string>();
+  const consoleAuthIndex = findMistralConsoleAuthIndex(providers);
   for (const provider of providers) {
     if (provider.disabled) continue;
     const kind = resolveApiKeyQuotaProvider(provider.baseUrl);
@@ -100,6 +135,7 @@ export function buildApiKeyQuotaFiles(
         baseUrl: trimBaseUrl(provider.baseUrl),
         models,
         providerName,
+        ...(kind === 'mistral' && consoleAuthIndex ? { consoleAuthIndex } : {}),
       });
     });
   }

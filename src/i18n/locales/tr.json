@@ -666,7 +666,10 @@
     "probe_model": "Model",
     "probe_cost": "Kontrol maliyeti",
     "probe_cost_value": "{{tokens}} token",
-    "minute_only_note": "Mistral API yalnızca dakikalık limitleri bildirir. Aylık kullanım Mistral konsolunda görünür.",
+    "monthly_budget": "Plana dahil aylık API bütçesi",
+    "monthly_budget_spent": "Bu ay harcanan",
+    "console_session_expired": "Mistral konsol oturumu sona erdi. Aylık bütçeyi görmek için mistral-console sağlayıcısına yeni bir çerez yapıştırın.",
+    "minute_only_note": "Mistral API yalnızca dakikalık limitleri bildirir. Plana dahil aylık bütçeyi görmek için konsol oturum çerezini ekleyin.",
     "rate_limited": "Şu anda hız sınırına takıldı. Limitler bir dakika içinde sıfırlanır."
   },
   "openrouter_quota": {

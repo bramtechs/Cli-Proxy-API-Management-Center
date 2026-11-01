@@ -666,7 +666,10 @@
     "probe_model": "모델",
     "probe_cost": "확인 비용",
     "probe_cost_value": "{{tokens}} 토큰",
-    "minute_only_note": "Mistral API는 분당 한도만 제공합니다. 월간 사용량은 Mistral 콘솔에서 확인하세요.",
+    "monthly_budget": "플랜 포함 월간 API 한도",
+    "monthly_budget_spent": "이번 달 사용액",
+    "console_session_expired": "Mistral 콘솔 세션이 만료되었습니다. mistral-console 공급자에 새 쿠키를 붙여넣으면 월간 한도를 볼 수 있습니다.",
+    "minute_only_note": "Mistral API는 분당 한도만 제공합니다. 콘솔 세션 쿠키를 추가하면 플랜 포함 월간 한도를 볼 수 있습니다.",
     "rate_limited": "현재 속도 제한 중입니다. 1분 안에 초기화됩니다."
   },
   "openrouter_quota": {

@@ -669,7 +669,10 @@
     "probe_model": "Модель",
     "probe_cost": "Стоимость проверки",
     "probe_cost_value": "{{tokens}} токенов",
-    "minute_only_note": "API Mistral сообщает только поминутные лимиты. Месячное использование смотрите в консоли Mistral.",
+    "monthly_budget": "Месячный лимит API по тарифу",
+    "monthly_budget_spent": "Израсходовано за месяц",
+    "console_session_expired": "Сессия консоли Mistral истекла. Вставьте новый cookie в провайдер mistral-console, чтобы видеть месячный лимит.",
+    "minute_only_note": "API Mistral сообщает только поминутные лимиты. Добавьте cookie сессии консоли, чтобы видеть месячный лимит по тарифу.",
     "rate_limited": "Сейчас действует ограничение скорости. Лимиты сбросятся в течение минуты."
   },
   "openrouter_quota": {

@@ -525,7 +525,7 @@ export interface XaiQuotaState {
 }
 
 // API-key quota cards (OpenAI-compatible providers configured with plain API keys)
-export type ApiKeyQuotaUnit = 'usd' | 'count' | 'tokens';
+export type ApiKeyQuotaUnit = 'usd' | 'count' | 'tokens' | 'currency';
 
 export interface ApiKeyQuotaRow {
   id: string;
@@ -534,6 +534,8 @@ export interface ApiKeyQuotaRow {
   /** Zero or negative means the window has no reported cap. */
   limit: number;
   unit: ApiKeyQuotaUnit;
+  /** ISO 4217 code for `unit: 'currency'`; defaults to USD when absent. */
+  currency?: string | null;
   /** Reset instant in epoch ms; null when the upstream reports no reset. */
   resetAtMs?: number | null;
   /** Window length in hours, used by the quota timeline. */

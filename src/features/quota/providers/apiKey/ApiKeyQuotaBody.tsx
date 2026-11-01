@@ -14,11 +14,28 @@ import { collectQuotaRowInstants, pickUrgentRowId } from '../../resetSchedule';
 import type { QuotaBodyProps } from '../../types';
 import type { QuotaProviderType } from '../types';
 
-const formatAmount = (value: number, unit: ApiKeyQuotaRow['unit'], locale?: string): string => {
+const formatAmount = (
+  value: number,
+  unit: ApiKeyQuotaRow['unit'],
+  locale?: string,
+  currency?: string | null
+): string => {
   if (unit === 'usd') {
     const abs = Math.abs(value);
     const digits = abs > 0 && abs < 0.01 ? 4 : 2;
     return `${value < 0 ? '-' : ''}$${abs.toFixed(digits)}`;
+  }
+  if (unit === 'currency') {
+    const code = (currency ?? 'USD').toUpperCase();
+    try {
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: code,
+        maximumFractionDigits: Math.abs(value) > 0 && Math.abs(value) < 0.01 ? 4 : 2,
+      }).format(value);
+    } catch {
+      return `${value.toFixed(2)} ${code}`;
+    }
   }
   return new Intl.NumberFormat(locale, {
     notation: value >= 100_000 ? 'compact' : 'standard',
@@ -70,11 +87,16 @@ function ApiKeyQuotaBody({
         const amount =
           row.limit > 0
             ? t('api_key_quota.amount_left', {
-                remaining: formatAmount(Math.max(0, row.limit - row.used), row.unit, locale),
-                limit: formatAmount(row.limit, row.unit, locale),
+                remaining: formatAmount(
+                  Math.max(0, row.limit - row.used),
+                  row.unit,
+                  locale,
+                  row.currency
+                ),
+                limit: formatAmount(row.limit, row.unit, locale, row.currency),
               })
             : t('api_key_quota.amount_used', {
-                used: formatAmount(row.used, row.unit, locale),
+                used: formatAmount(row.used, row.unit, locale, row.currency),
               });
 
         return (

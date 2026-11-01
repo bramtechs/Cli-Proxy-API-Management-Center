@@ -666,7 +666,10 @@
     "probe_model": "Model",
     "probe_cost": "Probe cost",
     "probe_cost_value": "{{tokens}} tokens",
-    "minute_only_note": "Mistral only reports per-minute limits through the API. Monthly usage is shown in the Mistral console.",
+    "monthly_budget": "Included monthly API budget",
+    "monthly_budget_spent": "Spent this month",
+    "console_session_expired": "Mistral console session expired. Paste a fresh cookie into the mistral-console provider to see the monthly budget.",
+    "minute_only_note": "Mistral only reports per-minute limits through the API. Add the console session cookie to see the included monthly budget.",
     "rate_limited": "Rate limited right now. Limits reset within a minute."
   },
   "openrouter_quota": {
