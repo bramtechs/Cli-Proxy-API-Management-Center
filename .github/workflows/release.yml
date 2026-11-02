@@ -37,11 +37,14 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
 
+      - name: Build quota recorder
+        run: bun build recorder/main.ts --target bun --minify-syntax --outfile dist/quota-recorder.js
+
       - name: Prepare release assets
         run: |
           cd dist
           mv index.html management.html
-          ls -lh management.html
+          ls -lh management.html quota-recorder.js
 
       - name: Generate release notes
         run: |
@@ -60,7 +63,9 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/management.html
+          files: |
+            dist/management.html
+            dist/quota-recorder.js
           body_path: release-notes.md
           draft: false
           prerelease: false
